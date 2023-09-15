@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>学校人力管理系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" href="./css/font.css">
+    <link rel="stylesheet" href="./css/xadmin.css">
+    <script src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./js/xadmin.js"></script>
+</head>
+
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+                        <div class="layui-input-inline layui-show-xs-block">
+                            <input type="text" name="username" placeholder="请输入工号" autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                        <div class="layui-input-inline layui-show-xs-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="sreach">
+                                <i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card-header">
+                    <button class="layui-btn" onclick="xadmin.open('添加用户','./family-add',null,800,600)">
+                        <i class="layui-icon"></i>添加</button>
+                </div>
+                <div class="layui-card-body ">
+                    <table class="layui-table layui-form">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>工号</th>
+                            <th>妻(夫)</th>
+                            <th>父亲</th>
+                            <th>母亲</th>
+                            <th>子女1</th>
+                            <th>子女2</th>
+                            <th>子女3</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="li:${list}">
+                            <td th:text="${li.id}"></td>
+                            <td th:text="${li.tchId}"></td>
+                            <td th:text="${li.wifeHusband}"></td>
+                            <td th:text="${li.father}"></td>
+                            <td th:text="${li.mother}"></td>
+                            <td th:text="${li.son1}"></td>
+                            <td th:text="${li.son2}"></td>
+                            <td th:text="${li.son3}"></td>
+                            <td class="td-manage">
+                                <button class="layui-btn" th:onclick="|xadmin.open('编辑','family-add',${li.id},800,600)|" href="javascript:;">
+                                    <i class="layui-icon">&#xe63c;</i>编辑</button>
+                                <button class="layui-btn layui-btn-danger" th:onclick="|member_del(this,${li.id})|" href="javascript:;">
+                                    <i class="layui-icon">&#xe640;</i>删除</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="layui-card-body ">
+                    <div class="page">
+                        <div>
+                            <a class="prev" href="">&lt;&lt;</a>
+                            <a class="num" href="">1</a>
+                            <span class="current">2</span>
+                            <a class="num" href="">3</a>
+                            <a class="num" href="">5</a>
+                            <a class="next" href="">&gt;&gt;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>layui.use(['laydate', 'form'],
+    function () {
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#end' //指定元素
+        });
+    });
+
+    /*删除*/
+    function member_del(obj, id) {
+        layer.confirm('确认要删除吗？',
+            function delUser() {
+                $.ajax({
+                    url: "/family/del/"+id,
+                    type: "DELETE",
+                    success: function (result) {}
+                })
+                layer.msg('已删除!', {
+                    icon: 1,
+                    time: 500
+                });
+                document.location.reload();
+                // location.reload();
+            })
+        // window.location.reload(true);
+    }
+
+</script>
+
+</html>

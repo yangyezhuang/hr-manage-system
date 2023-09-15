@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyz.hrms.dao.RecordDao">
+
+    <resultMap type="com.yyz.hrms.entity.Record" id="RecordMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="tchId" column="tch_id" jdbcType="INTEGER"/>
+        <result property="prim" column="prim" jdbcType="VARCHAR"/>
+        <result property="juniorHigh" column="junior_high" jdbcType="VARCHAR"/>
+        <result property="high" column="high" jdbcType="VARCHAR"/>
+        <result property="university" column="university" jdbcType="VARCHAR"/>
+        <result property="postgraduate" column="postgraduate" jdbcType="VARCHAR"/>
+        <result property="doctor" column="doctor" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询全部-->
+    <select id="queryAll" resultMap="RecordMap">
+        select
+          id, tch_id, prim, junior_high, high, university, postgraduate, doctor
+        from record
+    </select>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="RecordMap">
+        select
+          id, tch_id, prim, junior_high, high, university, postgraduate, doctor
+        from record
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="RecordMap">
+        select
+          id, tch_id, prim, junior_high, high, university, postgraduate, doctor
+        from record
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="tchId != null">
+                and tch_id = #{tchId}
+            </if>
+            <if test="prim != null and prim != ''">
+                and prim = #{prim}
+            </if>
+            <if test="juniorHigh != null and juniorHigh != ''">
+                and junior_high = #{juniorHigh}
+            </if>
+            <if test="high != null and high != ''">
+                and high = #{high}
+            </if>
+            <if test="university != null and university != ''">
+                and university = #{university}
+            </if>
+            <if test="postgraduate != null and postgraduate != ''">
+                and postgraduate = #{postgraduate}
+            </if>
+            <if test="doctor != null and doctor != ''">
+                and doctor = #{doctor}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from record
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="tchId != null">
+                and tch_id = #{tchId}
+            </if>
+            <if test="prim != null and prim != ''">
+                and prim = #{prim}
+            </if>
+            <if test="juniorHigh != null and juniorHigh != ''">
+                and junior_high = #{juniorHigh}
+            </if>
+            <if test="high != null and high != ''">
+                and high = #{high}
+            </if>
+            <if test="university != null and university != ''">
+                and university = #{university}
+            </if>
+            <if test="postgraduate != null and postgraduate != ''">
+                and postgraduate = #{postgraduate}
+            </if>
+            <if test="doctor != null and doctor != ''">
+                and doctor = #{doctor}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into record(tch_id, prim, junior_high, high, university, postgraduate, doctor)
+        values (#{tchId}, #{prim}, #{juniorHigh}, #{high}, #{university}, #{postgraduate}, #{doctor})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into record(tch_id, prim, junior_high, high, university, postgraduate, doctor)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.tchId}, #{entity.prim}, #{entity.juniorHigh}, #{entity.high}, #{entity.university}, #{entity.postgraduate}, #{entity.doctor})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into record(tch_id, prim, junior_high, high, university, postgraduate, doctor)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.tchId}, #{entity.prim}, #{entity.juniorHigh}, #{entity.high}, #{entity.university}, #{entity.postgraduate}, #{entity.doctor})
+        </foreach>
+        on duplicate key update
+        tch_id = values(tch_id),
+        prim = values(prim),
+        junior_high = values(junior_high),
+        high = values(high),
+        university = values(university),
+        postgraduate = values(postgraduate),
+        doctor = values(doctor)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update record
+        <set>
+            <if test="tchId != null">
+                tch_id = #{tchId},
+            </if>
+            <if test="prim != null and prim != ''">
+                prim = #{prim},
+            </if>
+            <if test="juniorHigh != null and juniorHigh != ''">
+                junior_high = #{juniorHigh},
+            </if>
+            <if test="high != null and high != ''">
+                high = #{high},
+            </if>
+            <if test="university != null and university != ''">
+                university = #{university},
+            </if>
+            <if test="postgraduate != null and postgraduate != ''">
+                postgraduate = #{postgraduate},
+            </if>
+            <if test="doctor != null and doctor != ''">
+                doctor = #{doctor},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from record where id = #{id}
+    </delete>
+
+</mapper>
+

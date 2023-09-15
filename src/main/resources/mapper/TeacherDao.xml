@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyz.hrms.dao.TeacherDao">
+
+    <resultMap type="com.yyz.hrms.entity.Teacher" id="TeacherMap">
+        <result property="tchId" column="tch_id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="VARCHAR"/>
+        <result property="year" column="year" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="postId" column="post_id" jdbcType="INTEGER"/>
+        <result property="departId" column="depart_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询全部-->
+    <select id="queryAll" resultMap="TeacherMap">
+        select
+          tch_id, name, sex, year, email, post_id, depart_id
+        from teacher
+    </select>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TeacherMap">
+        select
+          tch_id, name, sex, year, email, post_id, depart_id
+        from teacher
+        where tch_id = #{tchId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TeacherMap">
+        select
+          tch_id, name, sex, year, email, post_id, depart_id
+        from teacher
+        <where>
+            <if test="tchId != null">
+                and tch_id = #{tchId}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+            <if test="year != null and year != ''">
+                and year = #{year}
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+            <if test="postId != null">
+                and post_id = #{postId}
+            </if>
+            <if test="departId != null">
+                and depart_id = #{departId}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from teacher
+        <where>
+            <if test="tchId != null">
+                and tch_id = #{tchId}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+            <if test="year != null and year != ''">
+                and year = #{year}
+            </if>
+            <if test="email != null and email != ''">
+                and email = #{email}
+            </if>
+            <if test="postId != null">
+                and post_id = #{postId}
+            </if>
+            <if test="departId != null">
+                and depart_id = #{departId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="tchId" useGeneratedKeys="true">
+        insert into teacher(name, sex, year, email, post_id, depart_id)
+        values (#{name}, #{sex}, #{year}, #{email}, #{postId}, #{departId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="tchId" useGeneratedKeys="true">
+        insert into teacher(name, sex, year, email, post_id, depart_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.name}, #{entity.sex}, #{entity.year}, #{entity.email}, #{entity.postId}, #{entity.departId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="tchId" useGeneratedKeys="true">
+        insert into teacher(name, sex, year, email, post_id, depart_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.name}, #{entity.sex}, #{entity.year}, #{entity.email}, #{entity.postId}, #{entity.departId})
+        </foreach>
+        on duplicate key update
+        name = values(name),
+        sex = values(sex),
+        year = values(year),
+        email = values(email),
+        post_id = values(post_id),
+        depart_id = values(depart_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update teacher
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="sex != null and sex != ''">
+                sex = #{sex},
+            </if>
+            <if test="year != null and year != ''">
+                year = #{year},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="postId != null">
+                post_id = #{postId},
+            </if>
+            <if test="departId != null">
+                depart_id = #{departId},
+            </if>
+        </set>
+        where tch_id = #{tchId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from teacher where tch_id = #{tchId}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyz.hrms.dao.RewardDao">
+
+    <resultMap type="com.yyz.hrms.entity.Reward" id="RewardMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="tchId" column="tch_id" jdbcType="INTEGER"/>
+        <result property="date" column="date" jdbcType="TIMESTAMP"/>
+        <result property="reward" column="reward" jdbcType="VARCHAR"/>
+        <result property="punish" column="punish" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询全部-->
+    <select id="queryAll" resultMap="RewardMap">
+        select
+          id, tch_id, date, reward, punish
+        from reward
+    </select>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="RewardMap">
+        select
+          id, tch_id, date, reward, punish
+        from reward
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="RewardMap">
+        select
+          id, tch_id, date, reward, punish
+        from reward
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="tchId != null">
+                and tch_id = #{tchId}
+            </if>
+            <if test="date != null">
+                and date = #{date}
+            </if>
+            <if test="reward != null and reward != ''">
+                and reward = #{reward}
+            </if>
+            <if test="punish != null and punish != ''">
+                and punish = #{punish}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from reward
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="tchId != null">
+                and tch_id = #{tchId}
+            </if>
+            <if test="date != null">
+                and date = #{date}
+            </if>
+            <if test="reward != null and reward != ''">
+                and reward = #{reward}
+            </if>
+            <if test="punish != null and punish != ''">
+                and punish = #{punish}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into reward(tch_id, date, reward, punish)
+        values (#{tchId}, #{date}, #{reward}, #{punish})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into reward(tch_id, date, reward, punish)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.tchId}, #{entity.date}, #{entity.reward}, #{entity.punish})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into reward(tch_id, date, reward, punish)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.tchId}, #{entity.date}, #{entity.reward}, #{entity.punish})
+        </foreach>
+        on duplicate key update
+        tch_id = values(tch_id),
+        date = values(date),
+        reward = values(reward),
+        punish = values(punish)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update reward
+        <set>
+            <if test="tchId != null">
+                tch_id = #{tchId},
+            </if>
+            <if test="date != null">
+                date = #{date},
+            </if>
+            <if test="reward != null and reward != ''">
+                reward = #{reward},
+            </if>
+            <if test="punish != null and punish != ''">
+                punish = #{punish},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from reward where id = #{id}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yyz.hrms.dao.PostDao">
+
+    <resultMap type="com.yyz.hrms.entity.Post" id="PostMap">
+        <result property="postId" column="post_id" jdbcType="INTEGER"/>
+        <result property="postName" column="post_name" jdbcType="VARCHAR"/>
+        <result property="peopleNum" column="people_num" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <select id="queryAll" resultMap="PostMap">
+        select
+          post_id, post_name, people_num
+        from post
+    </select>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PostMap">
+        select
+          post_id, post_name, people_num
+        from post
+        where post_id = #{postId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PostMap">
+        select
+          post_id, post_name, people_num
+        from post
+        <where>
+            <if test="postId != null">
+                and post_id = #{postId}
+            </if>
+            <if test="postName != null and postName != ''">
+                and post_name = #{postName}
+            </if>
+            <if test="peopleNum != null and peopleNum != ''">
+                and people_num = #{peopleNum}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from post
+        <where>
+            <if test="postId != null">
+                and post_id = #{postId}
+            </if>
+            <if test="postName != null and postName != ''">
+                and post_name = #{postName}
+            </if>
+            <if test="peopleNum != null and peopleNum != ''">
+                and people_num = #{peopleNum}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="postId" useGeneratedKeys="true">
+        insert into post(post_name, people_num)
+        values (#{postName}, #{peopleNum})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="postId" useGeneratedKeys="true">
+        insert into post(post_name, people_num)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.postName}, #{entity.peopleNum})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="postId" useGeneratedKeys="true">
+        insert into post(post_name, people_num)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.postName}, #{entity.peopleNum})
+        </foreach>
+        on duplicate key update
+        post_name = values(post_name),
+        people_num = values(people_num)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update post
+        <set>
+            <if test="postName != null and postName != ''">
+                post_name = #{postName},
+            </if>
+            <if test="peopleNum != null and peopleNum != ''">
+                people_num = #{peopleNum},
+            </if>
+        </set>
+        where post_id = #{postId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from post where post_id = #{postId}
+    </delete>
+
+</mapper>
+

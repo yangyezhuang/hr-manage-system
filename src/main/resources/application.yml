@@ -1,0 +1,14 @@
+spring:
+  main:
+    banner-mode: off
+  # 数据源连接信息
+  datasource:
+    username: root
+    password: mysql
+    url: jdbc:mysql://127.0.0.1:3306/hrms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # thymeleaf配置
+  thymeleaf:
+    cache: false
+mybatis:
+  mapper-locations: classpath:mapper/*
