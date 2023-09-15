@@ -6,18 +6,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * 页面控制层
+ */
 @Controller
 public class PageController {
+
     @Autowired
     private DepartService departService;
+
     @Autowired
     private FamilyService familyService;
+
     @Autowired
     private PostService postService;
+
     @Autowired
     private RecordService recordService;
+
     @Autowired
     private RewardService rewardService;
+
     @Autowired
     private TeacherService teacherService;
 
