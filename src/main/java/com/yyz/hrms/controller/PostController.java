@@ -6,6 +6,8 @@ import com.yyz.hrms.service.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -13,14 +15,23 @@ import javax.annotation.Resource;
 /**
  * (Post)表控制层
  */
-@RestController
-@RequestMapping("post")
+@Controller
+//@RequestMapping("post")
 public class PostController {
-    /**
-     * 服务对象
-     */
+
     @Resource
     private PostService postService;
+
+    @GetMapping("post-list")
+    public String postList(Model model) {
+        model.addAttribute("list", postService.queryAll());
+        return "post-list";
+    }
+
+    @GetMapping("post-add")
+    public String postAdd() {
+        return "post-add";
+    }
 
     /**
      * 分页查询
@@ -29,7 +40,8 @@ public class PostController {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-    @GetMapping
+    @GetMapping("/post")
+    @ResponseBody
     public ResponseEntity<Page<Post>> queryByPage(Post post, PageRequest pageRequest) {
         return ResponseEntity.ok(this.postService.queryByPage(post, pageRequest));
     }
@@ -40,7 +52,8 @@ public class PostController {
      * @param id 主键
      * @return 单条数据
      */
-    @GetMapping("/getPost/{id}")
+    @GetMapping("/post/getPost/{id}")
+    @ResponseBody
     public ResponseEntity<Post> queryById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(this.postService.queryById(id));
     }
@@ -51,7 +64,8 @@ public class PostController {
      * @param post 实体
      * @return 新增结果
      */
-    @PostMapping("add")
+    @PostMapping("/post/add")
+    @ResponseBody
     public ResponseEntity<Post> add(Post post) {
         return ResponseEntity.ok(this.postService.insert(post));
     }
@@ -62,7 +76,8 @@ public class PostController {
      * @param post 实体
      * @return 编辑结果
      */
-    @PutMapping("update")
+    @PutMapping("/post/update")
+    @ResponseBody
     public ResponseEntity<Post> edit(Post post) {
         return ResponseEntity.ok(this.postService.update(post));
     }
@@ -73,7 +88,8 @@ public class PostController {
      * @param id 主键
      * @return 删除是否成功
      */
-    @DeleteMapping("/del/{id}")
+    @DeleteMapping("/post/del/{id}")
+    @ResponseBody
     public ResponseEntity<Boolean> deleteById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(this.postService.deleteById(id));
     }

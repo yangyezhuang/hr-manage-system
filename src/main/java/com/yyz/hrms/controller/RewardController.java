@@ -5,6 +5,8 @@ import com.yyz.hrms.service.RewardService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -12,14 +14,23 @@ import javax.annotation.Resource;
 /**
  * (Reward)表控制层
  */
-@RestController
-@RequestMapping("reward")
+@Controller
+//@RequestMapping("reward")
 public class RewardController {
-    /**
-     * 服务对象
-     */
+
     @Resource
     private RewardService rewardService;
+
+    @GetMapping("reward-list")
+    public String rewardList(Model model) {
+        model.addAttribute("list", rewardService.queryAll());
+        return "reward-list";
+    }
+
+    @GetMapping("reward-add")
+    public String rewardAdd() {
+        return "reward-add";
+    }
 
     /**
      * 分页查询
@@ -28,7 +39,8 @@ public class RewardController {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-    @GetMapping
+    @GetMapping("/reward")
+    @ResponseBody
     public ResponseEntity<Page<Reward>> queryByPage(Reward reward, PageRequest pageRequest) {
         return ResponseEntity.ok(this.rewardService.queryByPage(reward, pageRequest));
     }
@@ -39,7 +51,8 @@ public class RewardController {
      * @param id 主键
      * @return 单条数据
      */
-    @GetMapping("/getReward/{id}")
+    @GetMapping("/reward/getReward/{id}")
+    @ResponseBody
     public ResponseEntity<Reward> queryById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(this.rewardService.queryById(id));
     }
@@ -50,7 +63,8 @@ public class RewardController {
      * @param reward 实体
      * @return 新增结果
      */
-    @PostMapping("add")
+    @PostMapping("/reward/add")
+    @ResponseBody
     public ResponseEntity<Reward> add(Reward reward) {
         return ResponseEntity.ok(this.rewardService.insert(reward));
     }
@@ -61,7 +75,8 @@ public class RewardController {
      * @param reward 实体
      * @return 编辑结果
      */
-    @PutMapping("update")
+    @PutMapping("/reward/update")
+    @ResponseBody
     public ResponseEntity<Reward> edit(Reward reward) {
         return ResponseEntity.ok(this.rewardService.update(reward));
     }
@@ -72,7 +87,8 @@ public class RewardController {
      * @param id 主键
      * @return 删除是否成功
      */
-    @DeleteMapping("/del/{id}")
+    @DeleteMapping("/reward/del/{id}")
+    @ResponseBody
     public ResponseEntity<Boolean> deleteById(@PathVariable("id")Integer id) {
         return ResponseEntity.ok(this.rewardService.deleteById(id));
     }

@@ -5,6 +5,8 @@ import com.yyz.hrms.service.FamilyService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -12,14 +14,23 @@ import javax.annotation.Resource;
 /**
  * (Family)表控制层
  */
-@RestController
-@RequestMapping("family")
+@Controller
+//@RequestMapping("family")
 public class FamilyController {
-    /**
-     * 服务对象
-     */
+
     @Resource
     private FamilyService familyService;
+
+    @GetMapping("family-list")
+    public String familyList(Model model) {
+        model.addAttribute("list", familyService.queryAll());
+        return "family-list";
+    }
+
+    @GetMapping("family-add")
+    public String familyAdd() {
+        return "family-add";
+    }
 
     /**
      * 分页查询
@@ -28,7 +39,8 @@ public class FamilyController {
      * @param pageRequest      分页对象
      * @return 查询结果
      */
-    @GetMapping
+    @GetMapping("/family")
+    @ResponseBody
     public ResponseEntity<Page<Family>> queryByPage(Family family, PageRequest pageRequest) {
         return ResponseEntity.ok(this.familyService.queryByPage(family, pageRequest));
     }
@@ -39,7 +51,8 @@ public class FamilyController {
      * @param id 主键
      * @return 单条数据
      */
-    @GetMapping("/getFamily/{id}")
+    @GetMapping("/family/getFamily/{id}")
+    @ResponseBody
     public ResponseEntity<Family> queryById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(this.familyService.queryById(id));
     }
@@ -50,7 +63,8 @@ public class FamilyController {
      * @param family 实体
      * @return 新增结果
      */
-    @PostMapping("add")
+    @PostMapping("/family/add")
+    @ResponseBody
     public ResponseEntity<Family> add(Family family) {
         return ResponseEntity.ok(this.familyService.insert(family));
     }
@@ -61,7 +75,8 @@ public class FamilyController {
      * @param family 实体
      * @return 编辑结果
      */
-    @PutMapping("/update")
+    @PutMapping("/family/update")
+    @ResponseBody
     public ResponseEntity<Family> edit(Family family) {
         return ResponseEntity.ok(this.familyService.update(family));
     }
@@ -72,7 +87,8 @@ public class FamilyController {
      * @param id 主键
      * @return 删除是否成功
      */
-    @DeleteMapping("/del/{id}")
+    @DeleteMapping("/family/del/{id}")
+    @ResponseBody
     public ResponseEntity<Boolean> deleteById(@PathVariable("id")Integer id) {
         return ResponseEntity.ok(this.familyService.deleteById(id));
     }

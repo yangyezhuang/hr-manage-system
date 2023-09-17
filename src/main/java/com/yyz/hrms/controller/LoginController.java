@@ -1,29 +1,45 @@
 package com.yyz.hrms.controller;
 
 import com.yyz.hrms.entity.User;
+import com.yyz.hrms.util.HostHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class LoginController {
 
-    @GetMapping("/")
-    public String login() {
+    @Autowired
+    private HostHolder hostHolder;
+
+    @GetMapping("/" )
+    public String getLoginPage() {
         return "login";
     }
 
-    @PostMapping("dologin")
-    public String dologin(User user) {
-        if (user.getUsername().equals("admin") && user.getPassword().equals("admin")) {
-            System.out.println(user.getUsername() + ":" + user.getPassword());
+    @GetMapping("/welcome")
+    public String welcome() {
+        return "welcome";
+    }
+
+    @GetMapping("/welcome1")
+    public String welcome1() {
+        return "home";
+    }
+
+
+
+    @RequestMapping(path = "/login", method = RequestMethod.POST)
+    public String dologin(String username, String password) {
+        if (username.equals("tom" ) && password.equals("123" )) {
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+            hostHolder.setUser(user);
+
             return "index";
         } else {
             return "error";
         }
-    }
-
-    @GetMapping("/home")
-    public String home() {
-        return "index";
     }
 }
